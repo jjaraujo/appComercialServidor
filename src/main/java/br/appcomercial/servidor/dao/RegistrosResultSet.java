@@ -1,4 +1,4 @@
-package br.com.jmdesenvolvimento.servidor.dao;
+package br.appcomercial.servidor.dao;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -66,7 +66,7 @@ public class RegistrosResultSet implements IRegistros {
     return 0L;
   }
   
-  public String get(int position)
+  public String getNomeColuna(int position)
   {
     try
     {

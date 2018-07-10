@@ -1,4 +1,4 @@
-package br.com.jmdesenvolvimento.servidor.dao;
+package br.appcomercial.servidor.dao;
 
 
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
@@ -12,10 +12,10 @@ public class ConnectionFactory {
   {
     try {
       DriverManager.registerDriver(new SQLServerDriver());
-      String usuario = "jjaraujo";
-      String senha = "J040M4r14";
+      String usuario = "sa";
+      String senha = "123spn";
       return DriverManager.getConnection(
-        "jdbc:sqlserver://appcomercial.c58bevvh3ij6.us-east-2.rds.amazonaws.com;database=aplicacaocomercial;", 
+        "jdbc:sqlserver://localhost:1433;database=aplicacaocomercial;", 
         usuario, senha);
     }
     catch (SQLException e)

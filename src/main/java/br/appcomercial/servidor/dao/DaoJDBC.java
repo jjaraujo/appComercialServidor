@@ -1,4 +1,4 @@
-package br.com.jmdesenvolvimento.servidor.dao;
+package br.appcomercial.servidor.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +22,6 @@ public class DaoJDBC implements IConnection {
   
   public DaoJDBC() {
 	  getConnection();
-//    FuncoesSql.createTables(this, 1);
   }
   
   private void getConnection() {
@@ -32,7 +31,7 @@ public class DaoJDBC implements IConnection {
 				  VariaveisControleG.connectionSql.isClosed() ? 
 			      new ConnectionFactory().getConnection() : VariaveisControleG.connectionSql;
         this.con = VariaveisControleG.connectionSql;
-       // FuncoesSql.createTables(this, 1);
+        FuncoesSql.createTables(this, 1);
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -52,11 +51,11 @@ public class DaoJDBC implements IConnection {
   public void insert(Tabela tabela){
     try {
       String nomeEntidade = tabela.getNomeTabela(false);
-      if (tabela.getId() == 0) {
+      if (tabela.getId() == 0) { 
         tabela.setId(countIdEntidade(tabela) + 1);
       }
       HashMap<String, Object> map = tabela.getMapAtributos(true);
-      insertTabelasFields(map);
+      insertTabelasFields(tabela);
       String sql = FuncoesSql.montaSqlInsert(tabela, 1);
       PreparedStatement stmt = con.prepareStatement(sql);
       executeUpdate(stmt);
@@ -77,12 +76,13 @@ public class DaoJDBC implements IConnection {
     }
   }
   
-  private void insertTabelasFields( HashMap<String, Object> map) {
+  private void insertTabelasFields( Tabela tabela) {
+	  HashMap<String, Object> map = tabela.getMapAtributos(false);
 	  map.keySet().
 	  forEach((s)->{
 		  Object o = map.get(s);
 		  if(VerificaTipos.isTabela(o) && ((Tabela)o).getId() > 0) {
-		  insert((Tabela) o);
+			  insert((Tabela) o);
 		  }
 	  });
   }
@@ -120,7 +120,7 @@ public class DaoJDBC implements IConnection {
       ResultSet set = stmt.executeQuery();
       RegistrosResultSet iSet = new RegistrosResultSet(set);
       while (set.next()) {
-        tabela = FuncoesSql.valoresSqlParaMap(this, iSet, map, tabela);
+        tabela = FuncoesSql.percorreColunasSqlEAdicionaNoMap(this, iSet, tabela);
       }
       stmt.close();
       set.close();
@@ -147,8 +147,7 @@ public class DaoJDBC implements IConnection {
       }
     }
     int i = countIdEntidade(tabela);
-    try
-    {
+    try {
       String sql = sqlSelect(tabela, null, where, groupBy, orderBy, limit);
       PreparedStatement stmt = getPreparedStatement(sql);
       ResultSet set = getResultSet(stmt);
@@ -156,9 +155,8 @@ public class DaoJDBC implements IConnection {
       HashMap<String, Object> map = tabela.getMapAtributos(false);
       
       List<Tabela> listEntidades = new ArrayList();
-      while (set.next())
-      {
-        Tabela e = FuncoesSql.valoresSqlParaMap(this, rSet, map, tabela);
+      while (set.next()){
+        Tabela e = FuncoesSql.percorreColunasSqlEAdicionaNoMap(this, rSet, tabela);
         
         listEntidades.add(e);
       }
@@ -166,16 +164,14 @@ public class DaoJDBC implements IConnection {
       
       return listEntidades;
     }
-    catch (Exception e)
-    {
+    catch (Exception e){
       e.printStackTrace();
     }
     return null;
   }
   
   public String getIdPorCpf(Tabela tabela,String cpfCnpj){
-    try
-    {
+    try {
     	
       String sql = "SELECT e." + tabela.getIdNome() + " FROM  " + tabela.getCaminhoTabelaBanco(FuncoesSql.SQL_SERVER) + 
         " e JOIN "+new Pessoa().getCaminhoTabelaBanco(FuncoesSql.SQL_SERVER)+" p ON p.id = pessoa WHERE cpfCnpj like '" + cpfCnpj + "'";
@@ -205,7 +201,7 @@ public class DaoJDBC implements IConnection {
     }
     catch (SQLException e)
     {
-      e.printStackTrace();
+   //   e.printStackTrace(); 
     }
   }
   
