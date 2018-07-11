@@ -21,7 +21,6 @@ import br.appcomercial.servidor.controller.VariaveisControle;
 
 public class Firebase {
 
-	String token = 				 "dSVkxcl_b54:APA91bE1ziWhlZ6I6cIwduEe-YHaDnC1e5ob8yJ1Q_y1866bidd5b2T2wCiyktfWNCtlLDJshmEMcrVFa-hmgzecg1Js_Qv2Bbs30A5A3pRx0ijesHYevGdx7f-mgmXqdXMLL4pyliFHAIzb-8HXwjTmLSKeDimajw";
 	public void create() {
 		FileInputStream serviceAccount;
 		try {
@@ -38,10 +37,11 @@ public class Firebase {
 			FirebaseMessaging fm = FirebaseMessaging.getInstance(app);
 			Builder builder = Message.builder();
 			Notification notification = new Notification("Teste Titulo", "Teste Corpo");
-			builder.putData("TESTE", "TESTE");
-			builder.setToken(token);
+			builder.putData("TESTENOVO", "TESTENOVO");
+			builder.setToken(new FirebaseConfig().getApikey());
 			Message msg = builder.build();
 			fm.send(msg);
+			System.out.println("Builder enviado: " + msg.builder().toString());
 			System.out.println("Msg enviada: " + msg.toString());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

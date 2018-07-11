@@ -12,8 +12,7 @@ public class FirebaseConfig extends Tabela {
 	public FirebaseConfig() {
 		this.URL = "https://appcomercial-dd7e5.firebaseio.com";
 		this.apikey = 
-				 "dSVkxcl_b54:APA91bE1ziWhlZ6I6cIwduEe-YHaDnC1e5ob8yJ1Q_y1866bidd5b2T2wCiyktfWNCtlLDJshmEMcrVFa-hmgzecg1Js_Qv2Bbs30A5A3pRx0ijesHYevGdx7f-mgmXqdXMLL4pyliFHAIzb-8HXwjTmLSKeDimajw";
-
+				 "cUcxFORARc0:APA91bHi1MyRSHYrTGmoItKgo87nxNdueyWVnmhA6sRvcY7jJMOABnQUHxxG74s7XSd9pT_JUtomJWC3zenlzxQHODmqFD8rT24SWITbJ0LslQ7tPPbKeLN2ll2STSB2gKTGqFJDIZZGS2_gxZhSJ2FttwSfmyW_OA";
 	}
 
 	public String getURL() {

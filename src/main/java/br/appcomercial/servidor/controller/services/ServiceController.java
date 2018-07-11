@@ -7,9 +7,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import com.jmdesenvolvimento.appcomercial.controller.FuncoesSql;
+import com.jmdesenvolvimento.appcomercial.controller.VariaveisControle;
 import com.jmdesenvolvimento.appcomercial.controller.VariaveisControleG;
+import com.jmdesenvolvimento.appcomercial.controller.funcoesGerais.EstrategiaLogin;
 import com.jmdesenvolvimento.appcomercial.model.Dispositivo;
 import com.jmdesenvolvimento.appcomercial.model.Tabela;
+import com.jmdesenvolvimento.appcomercial.model.entidades.cadastral.pessoas.AUsuario;
 import com.jmdesenvolvimento.appcomercial.model.entidades.cadastral.pessoas.EmpresaCliente;
 import com.jmdesenvolvimento.appcomercial.model.entidades.cadastral.pessoas.Funcionario;
 

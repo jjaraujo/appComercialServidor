@@ -31,7 +31,7 @@ public class DaoJDBC implements IConnection {
 				  VariaveisControleG.connectionSql.isClosed() ? 
 			      new ConnectionFactory().getConnection() : VariaveisControleG.connectionSql;
         this.con = VariaveisControleG.connectionSql;
-        FuncoesSql.createTables(this, 1);
+      //  FuncoesSql.createTables(this, 1);
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
