@@ -2,7 +2,7 @@ package br.appcomercial.servidor.controller.firebase;
 
 import java.util.List;
 
-import com.jmdesenvolvimento.appcomercial.model.Tabela;
+import app.jm.funcional.model.Tabela;
 
 public class FirebaseConfig extends Tabela {
 

@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import com.jmdesenvolvimento.appcomercial.model.dao.IRegistros;
+import app.jm.funcional.model.dao.IRegistros;
 
 public class RegistrosResultSet implements IRegistros {
   ResultSet resultSet;

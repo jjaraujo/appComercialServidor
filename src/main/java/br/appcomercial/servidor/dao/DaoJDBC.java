@@ -9,13 +9,13 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import com.jmdesenvolvimento.appcomercial.controller.FuncoesSql;
-import com.jmdesenvolvimento.appcomercial.controller.VariaveisControleG;
-import com.jmdesenvolvimento.appcomercial.controller.funcoesGerais.FuncoesGerais;
-import com.jmdesenvolvimento.appcomercial.controller.funcoesGerais.VerificaTipos;
-import com.jmdesenvolvimento.appcomercial.model.Tabela;
-import com.jmdesenvolvimento.appcomercial.model.dao.IConnection;
-import com.jmdesenvolvimento.appcomercial.model.entidades.cadastral.pessoas.Pessoa;
+import app.jm.funcional.controller.FuncoesSql;
+import app.jm.funcional.controller.VariaveisControle;
+import app.jm.funcional.controller.funcoesGerais.FuncoesGerais;
+import app.jm.funcional.controller.funcoesGerais.VerificaTipos;
+import app.jm.funcional.model.Tabela;
+import app.jm.funcional.model.dao.IConnection;
+import app.jm.funcional.model.entidades.cadastral.pessoas.Pessoa;
 
 public class DaoJDBC implements IConnection {
   Connection con;
@@ -27,11 +27,11 @@ public class DaoJDBC implements IConnection {
   private void getConnection() {
 	  try {
 		  
-		VariaveisControleG.connectionSql = VariaveisControleG.connectionSql == null || 
-				  VariaveisControleG.connectionSql.isClosed() ? 
-			      new ConnectionFactory().getConnection() : VariaveisControleG.connectionSql;
-        this.con = VariaveisControleG.connectionSql;
-      //  FuncoesSql.createTables(this, 1);
+		VariaveisControle.connectionSql = VariaveisControle.connectionSql == null || 
+				  VariaveisControle.connectionSql.isClosed() ? 
+			      new ConnectionFactory().getConnection() : VariaveisControle.connectionSql;
+        this.con = VariaveisControle.connectionSql;
+       // FuncoesSql.createTables(this, FuncoesSql.SQL_SERVER);
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -105,22 +105,24 @@ public class DaoJDBC implements IConnection {
     executeUpdate(stmt);
   }
   
-  public Tabela select(Tabela tabela, String id, String where, String groupBy, String orderBy, String limit)
-  {
+  public Tabela select(Tabela tabela, String id, String where, String groupBy, String orderBy, String limit) {
+	  
     String[] s = tabela.getNomesAtributos();
     HashMap<String, Object> map = tabela.getMapAtributos(false);
+    String filtraExclusao = " dataExclusao IS NULL ";
+    where = where == null ? filtraExclusao : where +" AND " + filtraExclusao; 
     if (id != null) {
-      where = tabela.getIdNome() + " = " + id;
+      where += " AND " + tabela.getIdNome() + " = " + id;
     }
     String nomeTabela = tabela.getNomeTabela(false);
     String sql = sqlSelect(tabela, id, where, groupBy, orderBy, limit);
-    try
-    {
+    try {
       PreparedStatement stmt = getPreparedStatement(sql);
       ResultSet set = stmt.executeQuery();
       RegistrosResultSet iSet = new RegistrosResultSet(set);
       while (set.next()) {
         tabela = FuncoesSql.percorreColunasSqlEAdicionaNoMap(this, iSet, tabela);
+        return tabela;
       }
       stmt.close();
       set.close();
@@ -129,7 +131,7 @@ public class DaoJDBC implements IConnection {
     {
       e.printStackTrace();
     }
-    return tabela;
+    return null;
   }
   
   public List<?> selectAll(Tabela tabela, String where, boolean pegaExcluidos)
