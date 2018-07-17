@@ -14,6 +14,7 @@ import app.jm.funcional.controller.funcoesGerais.FuncoesGerais;
 import app.jm.funcional.controller.funcoesGerais.VerificaTipos;
 import app.jm.funcional.model.Tabela;
 import app.jm.funcional.model.TabelasMapeadas;
+import app.jm.funcional.model.entidades.estoque.Produto;
 
 public final class LeituraJson {
 
@@ -59,11 +60,28 @@ public final class LeituraJson {
     }
 	
 	
+	
 	public static List<Tabela> jsonParaList(String s){
+		
+		s = s.replace("\\\"", "\"");
+		s = s.replace("'", "\"");
+		s = s.substring(s.length()-1, s.length()).equals("\"") ? s.substring(0, s.length()-1) : s;//remove aspas do final, caso tenha
+		s = s.substring(0, 2).equals("\"\"") ? s.substring(1) : s;
+		s = s.substring(s.length() - 1).equals("\"") ? s.substring(0, s.length() - 1) : s;
+		
+		String nome = s.replace("\"", "").split(":")[0].replace("{", "");
+		
+		int tamanhoNomeTabela = s.split(":")[0].length() + 1; // soma a posicao do :
+		s =  s.substring(tamanhoNomeTabela);
+		
         Gson gson = new Gson();
         try{
-        Type collectionType = new TypeToken<List<Tabela>>(){}.getType();
-        List<Tabela> listEntidade = gson.fromJson(s, collectionType);
+        	Tabela tabela = TabelasMapeadas.getTabelaForNome(nome, true);
+        	        	
+        Type collectionType = tabela.typeParaJson();
+        
+        
+        List listEntidade = gson.fromJson(s, collectionType);
         return  listEntidade;
         } catch(JsonSyntaxException e){
 
@@ -79,11 +97,15 @@ public final class LeituraJson {
         	if(list.isEmpty()) {
         		return "null";
         	}
-    return  ("\""+list.get(0).getNomeTabela(true)+"\":" + gson.toJson(list,type)).replace("[","").replace("]","");
+        	String json =  gson.toJson(list,type);
+        	
+        	return  "\""+list.get(0).getNomeTabela(true) + "':" + json.replace("\"", "'") + "\"";
+    
         } catch(JsonSyntaxException e){
             return null;
         }
     }
+	
 	
 	/**Verifica dodos os fields da tabela, inclusive os herdados, para anular o map dos que forem tabela*/
 	 private static void anulaMapDeTabelaFields(Tabela tabela) {

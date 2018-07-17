@@ -1,9 +1,14 @@
 package app.jm.funcional.model.entidades.contas;
 
+import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
 
 import app.jm.funcional.model.entidades.Entidade;
 import app.jm.funcional.model.entidades.cadastral.pessoas.Cliente;
+import app.jm.funcional.model.entidades.estoque.Grupo;
 import app.jm.funcional.model.entidades.vendas.TipoPagamento;import app.jm.funcional.model.tabelasIntermediarias.TabelaParcelasPagamento;
 
 public class ContaReceber extends Entidade {
@@ -12,15 +17,7 @@ public class ContaReceber extends Entidade {
     private TabelaParcelasPagamento tabelaParcelasPagamento;
     private Cliente cliente;
     private Calendar dataVencimento;
-//
-//    @Override
-//    public void setMapAtributos(HashMap<String, Object> map) {
-//        id = (int) map.get(getIdNome());
-//        tabelaParcelasPagamento = (TabelaParcelasPagamento) map.get("tabelaParcelasPagamento");//+FuncoesGerais.prefixoChaveEstrangeira());
-//        tipoPagamento = (TipoPagamento) map.get("tipoPagamento");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        cliente = (Cliente) map.get("cliente");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        dataVencimento = (Calendar) map.get("dataVencimento");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//    }
+
 
     public TipoPagamento getTipoPagamento() {
         return tipoPagamento;
@@ -61,4 +58,9 @@ public class ContaReceber extends Entidade {
     public void setDataVencimento(Calendar dataVencimento) {
         this.dataVencimento = dataVencimento;
     }
+    
+    @Override
+	public Type typeParaJson() {
+		return new TypeToken<List<ContaReceber>>(){}.getType();
+	}
 }

@@ -1,9 +1,13 @@
 package app.jm.funcional.model.entidades.cadastral.pessoas;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gson.reflect.TypeToken;
+
 import app.jm.funcional.model.Tabela;
+import app.jm.funcional.model.entidades.estoque.Grupo;
 
 public class Fornecedor  extends APessoa{
 
@@ -34,4 +38,11 @@ public class Fornecedor  extends APessoa{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Fornecedor>>(){}.getType();
+	}
+	
+	
 }

@@ -1,9 +1,13 @@
 package app.jm.funcional.model.filtrosOrdenacao;
 
+import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gson.reflect.TypeToken;
+
+import app.jm.funcional.model.Dispositivo;
 import app.jm.funcional.model.Tabela;
 import app.jm.funcional.model.entidades.cadastral.pessoas.Cliente;
 
@@ -14,17 +18,6 @@ public class FiltroContasReceber extends Tabela {
     private Calendar dataFim;
     private double valorMinimo;
     private double valorMaximo;
-
-//    @Override
-//    public void setMapAtributos(HashMap<String, Object> map) {
-//        id = (int) map.get(getIdNome());
-//        cliente = (Cliente) map.get("cliente");
-//        dataInicio = (Calendar) map.get("dataInicio");
-//        dataFim = (Calendar) map.get("dataFim");
-//        valorMinimo = (double) map.get("valorMinimo");
-//        valorMaximo = (double) map.get("valorMaximo");
-//
-//    }
 
     @Override
     public List<Tabela> getListValoresIniciais() {
@@ -70,4 +63,10 @@ public class FiltroContasReceber extends Tabela {
     public void setValorMaximo(double valorMaximo) {
         this.valorMaximo = valorMaximo;
     }
+    
+
+	@Override
+	public Type typeParaJson() {
+		return new TypeToken<List<FiltroContasReceber>>(){}.getType();
+	}
 }

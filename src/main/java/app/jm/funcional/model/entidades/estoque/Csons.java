@@ -1,8 +1,13 @@
 package app.jm.funcional.model.entidades.estoque;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 
+import com.google.gson.reflect.TypeToken;
+
+import app.jm.funcional.model.Dispositivo;
 import app.jm.funcional.model.entidades.Entidade;
 
 public class Csons extends Entidade implements Serializable {
@@ -16,9 +21,10 @@ public class Csons extends Entidade implements Serializable {
         this.nome_csons = nome_csons;
     }
 
-//    @Override
-//    public void setMapAtributos(HashMap<String, Object> map) {
-//        id = (int) map.get(getIdNome());
-//        nome_csons = (String) map.get("nome_csons");
-//    }
+    
+	@Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Csons>>(){}.getType();
+	}
+    
 }

@@ -30,14 +30,14 @@ public class ServiceLogin {
 		// caso seja empresa, o login será por email
 		Usuario usuario = login.contains("@")? new EmpresaCliente() : new Funcionario();
 		String usuarioEmailLogin = login;
-		int i = 0;
+		int i = 1;
 		String senhaLogin = senha;
 		String where = " login LIKE '" + usuarioEmailLogin + "' AND senha LIKE '" + senhaLogin + "'";
 		
 		usuario = (Usuario) dao.select(usuario, null, where, null, null, null);
 		
 		if(usuario == null) {
-			return "null";
+			return "\"null\"";
 		}
 		
 		usuario.setSenha("");

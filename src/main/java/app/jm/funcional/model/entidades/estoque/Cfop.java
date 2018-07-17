@@ -1,8 +1,13 @@
 package app.jm.funcional.model.entidades.estoque;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 
+import com.google.gson.reflect.TypeToken;
+
+import app.jm.funcional.model.Dispositivo;
 import app.jm.funcional.model.entidades.Entidade;
 
 public class Cfop extends Entidade implements Serializable {
@@ -42,15 +47,13 @@ public class Cfop extends Entidade implements Serializable {
     public void setTipoItem(TipoItem tipoItem) {
         this.tipoItem = tipoItem;
     }
-//
-//    @Override
-//    public void setMapAtributos(HashMap<String, Object> map) {
-//        id = (int) map.get(getIdNome());
-//        nome_cfop = (String) map.get("nome_cfop");
-//        csons = (Csons) map.get(csons.getIdNome());
-//        tipoItem = (TipoItem) map.get(tipoItem.getIdNome());
-//    }
 
+
+	@Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Cfop>>(){}.getType();
+	}
+    
     @Override
     public String toString() {
         return id + " " + nome_cfop;

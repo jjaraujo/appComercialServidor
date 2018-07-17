@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import app.jm.funcional.model.Tabela;
+import app.jm.funcional.model.dao.IConnection;
 
 public class EmpresaCliente extends Usuario {
 
@@ -22,8 +23,8 @@ public class EmpresaCliente extends Usuario {
 //    }
     
     @Override
-    public long getId() {
-    	return id;
+    public void geraId(IConnection con) {
+    	id = con.countIdEntidade(this);
     }
     
 	public Calendar getDataCadastro() {

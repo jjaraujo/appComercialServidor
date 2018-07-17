@@ -2,8 +2,12 @@ package app.jm.funcional.controller.funcoesGerais;
 
 import java.lang.reflect.Modifier;
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.List;
 
+import app.jm.funcional.controller.FuncoesSql;
+import app.jm.funcional.model.dao.IConnection;
+import app.jm.funcional.model.entidades.vendas.Caixa;
 import app.jm.funcional.model.entidades.vendas.Venda;
 import app.jm.funcional.model.tabelasIntermediarias.TabelaProdutosVenda;
 
@@ -57,9 +61,25 @@ public class FuncoesMatematicas {
         valorTotal = valorTotal - venda.getDesconto();
         return formataValoresDouble(valorTotal);
     }
+    
+    public static Caixa calculaCaixa(Calendar dataInicio, Calendar dataFim, IConnection con) {
+    	String inicio = FuncoesGerais.calendarToString(dataInicio, FuncoesGerais.yyyyMMdd_HHMMSS, true);
+    	String fim = FuncoesGerais.calendarToString(dataFim, FuncoesGerais.yyyyMMdd_HHMMSS, true);
+    	
+    	String where = fim != null ? " data BETWEEN #incio AND #fim" : "data = #inicio";
+    	where = where.replace("#inicio", inicio).replace("#fim", String.valueOf(fim));
+
+    	String[] colunas = {"COUNT(valorTotal) AS valorTotal","COUNT(valorTotalAVista) AS valorTotalAVista",
+    			"COUNT(valorTotalAPrazo) AS valorTotalAPrazo", "COUNT(valorDesconto) AS valorDesconto"};
+    	Caixa caixa = (Caixa) con.select(new Caixa(), where, colunas);
+    	
+    	return caixa == null ? new Caixa() : caixa;
+    	
+    }
 
     public static String formataValoresDouble(double valor){
         DecimalFormat df = new DecimalFormat("#.##");
         return df.format(valor).replace(".",",");
     }
+   
 }

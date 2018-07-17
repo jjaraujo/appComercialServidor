@@ -1,8 +1,13 @@
 package app.jm.funcional.model.tabelasIntermediarias;
 
+import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
+import com.google.gson.reflect.TypeToken;
+
+import app.jm.funcional.model.Dispositivo;
 import app.jm.funcional.model.entidades.estoque.Produto;
 
 public class TabelaProdutosVenda extends TabelaIntermediaria {
@@ -14,16 +19,7 @@ public class TabelaProdutosVenda extends TabelaIntermediaria {
     private Calendar dataCancelamento;
     private String motivoCancelamento;
 
-    @Override
-    public void setMapAtributos(HashMap<String, Object> map) {
-        id = (int) map.get(getIdNome());
-        venda = (int) map.get("venda");
-        qtd = (int) map.get("qtd");
-        produto = (Produto) map.get("produto");//+ FuncoesGerais.prefixoChaveEstrangeira());
-        dataCadastro = (Calendar) map.get("dataCadastro");
-        dataCancelamento = (Calendar) map.get("dataCancelamento");
-        motivoCancelamento = (String) map.get("motivoCancelamento");
-    }
+ 
 
     public long getVenda() {
         return venda;
@@ -77,4 +73,10 @@ public class TabelaProdutosVenda extends TabelaIntermediaria {
     public String toString() {
         return produto.getId()+ " " + produto.getNome_produto() ;
     }
+    
+
+	@Override
+	public Type typeParaJson() {
+		return new TypeToken<List<TabelaProdutosVenda>>(){}.getType();
+	}
 }

@@ -1,7 +1,13 @@
 package app.jm.funcional.model.tabelasIntermediarias;
 
+import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
+
+import app.jm.funcional.model.Dispositivo;
 
 public class TabelaParcelasPagamento extends TabelaIntermediaria {
 
@@ -10,16 +16,6 @@ public class TabelaParcelasPagamento extends TabelaIntermediaria {
     private Calendar data;
     private long tabelaPagamento;
     private int totalParcelas;
-
-    @Override
-    public void setMapAtributos(HashMap<String, Object> map) {
-        id = (int) map.get(getIdNome());
-        numeroParcela = (int) map.get("numeroParcela");
-        valor = (double) map.get("valor");
-        data = (Calendar) map.get("data");
-        tabelaPagamento = (int) map.get("tabelaPagamento");//+ FuncoesGerais.prefixoChaveEstrangeira());
-        totalParcelas = (int) map.get("totalParcelas");
-    }
 
     public Integer getNumeroParcela() {
         return numeroParcela;
@@ -60,5 +56,11 @@ public class TabelaParcelasPagamento extends TabelaIntermediaria {
     public void setTotalParcelas(int totalParcelas) {
         this.totalParcelas = totalParcelas;
     }
+    
+
+	@Override
+	public Type typeParaJson() {
+		return new TypeToken<List<TabelaParcelasPagamento>>(){}.getType();
+	}
 
 }

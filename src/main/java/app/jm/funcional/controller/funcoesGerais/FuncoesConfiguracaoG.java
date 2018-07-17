@@ -11,8 +11,8 @@ public class FuncoesConfiguracaoG {
     }
     
     public static void carregaConfiguracoesSimples(IConnection con){
-
-        VariaveisControle.configuracoesSimples = (Configuracoes) con.select(new Configuracoes(),"1",null,null,null,null);
+    	Configuracoes c = new Configuracoes();
+        VariaveisControle.configuracoesSimples = (Configuracoes) con.select(c,null,c.getDataExclusaoNome() + " IS NULL ",null,null,null);
         VariaveisControle.configuracoesSimples.setMapAtributos(VariaveisControle.configuracoesSimples.getMapAtributos(false));
 
     }

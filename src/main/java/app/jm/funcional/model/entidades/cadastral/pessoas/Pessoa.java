@@ -1,10 +1,15 @@
 package app.jm.funcional.model.entidades.cadastral.pessoas;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
 
 import app.jm.funcional.model.entidades.Entidade;
 import app.jm.funcional.model.entidades.cadastral.Estado;
 import app.jm.funcional.model.entidades.cadastral.Municipio;
+import app.jm.funcional.model.entidades.estoque.Grupo;
 
 public class Pessoa extends Entidade {
   //  public abstract void setNome_pessoa();
@@ -152,26 +157,10 @@ public class Pessoa extends Entidade {
         //+ " - " + this.email;
     }
 
-//
-//    @Override
-//    public void setMapAtributos(HashMap<String, Object> map) {
-//
-//        id = (int) map.get(getIdNome());
-//        nome_pessoa = (String) map.get("nome_pessoa");
-//        sexo = (int) map.get("sexo");
-//        logradouro = (String) map.get("logradouro");
-//        bairro = (String) map.get("bairro");
-//        cep = (int) map.get("cep");
-//        numero = (int) map.get("numero");
-//        municipio = (Municipio) map.get("municipio");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        estado = (Estado) map.get("estado");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        rgIE = (int) map.get("rgIE");
-//        cpfCNPJ = (String) map.get("cpfCNPJ");
-//        nascimento = (String) map.get("nascimento");
-//        telefone1 = (String) map.get("telefone1");
-//        telefone2 = (String) map.get("telefone2");
-//        email = (String) map.get("email");
-//    }
+    @Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Pessoa>>(){}.getType();
+	}
 
 
 }

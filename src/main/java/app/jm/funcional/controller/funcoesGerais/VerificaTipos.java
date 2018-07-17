@@ -2,6 +2,7 @@ package app.jm.funcional.controller.funcoesGerais;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
 
@@ -58,11 +59,24 @@ public final class VerificaTipos {
     public static boolean isCalendar(Object object, Field field){
         try{
             Calendar calendar = (Calendar) object;
+            calendar.clone();
             return true;
         }catch (ClassCastException e){
             return false;
         } catch (NullPointerException e){
             return field.toString().toLowerCase().contains("calendar");
+        }
+    }
+    
+    public static boolean isTime(Object object, Field field) {
+    	try{
+    		Time time = (Time) object;
+    		time.getSeconds();
+            return true;
+        }catch (ClassCastException e){
+            return false;
+        } catch (NullPointerException e){
+            return field.toString().toLowerCase().contains("time");
         }
     }
 
@@ -124,7 +138,7 @@ public final class VerificaTipos {
     }
 
     public static boolean isText(Object object, Field field ){
-        return isCalendar(object, field) || isString(object, field);
+        return isCalendar(object, field) || isString(object, field) || isTime(object, field);
     }
 
     public static boolean isInteger(Object object, Field field){

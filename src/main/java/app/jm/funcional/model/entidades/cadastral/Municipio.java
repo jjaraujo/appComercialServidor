@@ -2,9 +2,14 @@ package app.jm.funcional.model.entidades.cadastral;
 
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
 
 import app.jm.funcional.model.entidades.Entidade;
+import app.jm.funcional.model.entidades.estoque.Grupo;
 
 public class Municipio extends Entidade implements Serializable {
 
@@ -33,11 +38,9 @@ public class Municipio extends Entidade implements Serializable {
 	public boolean usaInsert() {
 		return false;
 	}
-
-//	@Override
-//	public void setMapAtributos(HashMap<String, Object> map) {
-//		id = (Integer) map.get(getIdNome());
-//		nome_municipio = (String) map.get("nome_municipio");
-//		estado = (Estado) map.get("estado");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//	}
+	
+	@Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Municipio>>(){}.getType();
+	}
 }

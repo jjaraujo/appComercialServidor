@@ -1,7 +1,11 @@
 package app.jm.funcional.model.entidades.estoque;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
 
 import app.jm.funcional.model.entidades.Entidade;
 
@@ -36,12 +40,8 @@ public class Ncm extends Entidade implements Serializable {
     }
 
 
-//    @Override
-//    public void setMapAtributos(HashMap<String, Object> map) {
-//        id = (int) map.get(getIdNome());
-//        codigo = (String) map.get("codigo");
-//        ipi = (String) map.get("ipi");
-//        descricao = (String) map.get("descricao");
-//    }
-
+    @Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Ncm>>(){}.getType();
+	}
 }

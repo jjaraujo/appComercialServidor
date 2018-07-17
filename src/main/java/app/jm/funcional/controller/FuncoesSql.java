@@ -3,6 +3,7 @@ package app.jm.funcional.controller;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -79,7 +80,7 @@ public abstract class FuncoesSql {
 		// verificar a possibilidade de pegar esses nomes direto do map
 		for (int j = 0; j < nomeAtributos.length; j++) {
 			String nome = nomeAtributos[j];
-			Object atributo = FuncoesGerais.getValorFieldDeTabela(nome, tabela);
+			Object atributo = tabela.getMapAtributos(false).get(nome);
 			if (nome == null) {
 				continue;
 			}
@@ -201,7 +202,7 @@ public abstract class FuncoesSql {
 			Object o = map.get(nomeColuna);
 			
 			if (VerificaTipos.isTabela(map.get(nomeColuna))) {
-				int idTabela = cursor.getInt(nomeColuna);
+				long idTabela = cursor.getLong(nomeColuna);
 
 				if (idTabela > 0) { // buscará entidade somente se id > 0
 					Tabela tabelaNoBanco = con.select(TabelasMapeadas.getTabelaForNome(nomeTipo, false), idTabela + "", null,
@@ -212,6 +213,9 @@ public abstract class FuncoesSql {
 					Tabela novaTabela = (Tabela) TabelasMapeadas.getTabelaForNome(nomeTipo, false);
 					map.put(nomeColuna, novaTabela);
 				}
+
+			}else if (VerificaTipos.isTime(o, null)) {
+				map.put(nomeColuna,FuncoesGerais.stringToTime(cursor.getString(nomeColuna)));
 
 			}else if (VerificaTipos.isString(o, null)) {
 			
@@ -302,9 +306,14 @@ public abstract class FuncoesSql {
 	 * @return Retorna o SQL montado pronto para execução*/
 	public static String montaSqlInsert(Tabela tabela, int tipoSql) {
 		String nomeTabela = tabela.getNomeTabela(false);
-		HashMap<String, Object> map = tabela.getMapAtributos(false);
+		HashMap<String, Object> map = tabela.getMapAtributos(true);
+		String insertOrIgnore = tipoSql == FuncoesSql.SQLITE ? " INSERT OR IGNORE " : " INSERT ";
+		String beginIfNotExists = tipoSql == FuncoesSql.SQL_SERVER ? "IF NOT EXISTS  (SELECT id FROM "+tabela.getNomeTabela(false)+" WHERE id = "+tabela.getId()+") BEGIN" : "";
 		String sql = tipoSql == SQL_SERVER ? " SET IDENTITY_INSERT "+nomeTabela+" ON; " : "";
-		sql += " INSERT INTO " + nomeTabela;
+		
+		sql += beginIfNotExists;
+		sql += insertOrIgnore + " INTO " + nomeTabela;
+		
 		String colunas = "(";
 		String valores = "(";
 		for (String s : map.keySet()) {
@@ -322,6 +331,11 @@ public abstract class FuncoesSql {
 				colunas += ", " + s;
 				valores += ", "
 						+ FuncoesGerais.calendarToString((Calendar) atributo, FuncoesGerais.yyyyMMdd_HHMMSS, true);
+
+			}else if (VerificaTipos.isTime(atributo, null)) {
+				colunas += ", " + s;
+				valores += ", '"
+						+ FuncoesGerais.timeToString((Time) atributo, FuncoesGerais.hhmmss)+"'";
 
 			} else if (VerificaTipos.isTabela(atributo)) {
 				Tabela e = (Tabela) atributo;
@@ -342,7 +356,7 @@ public abstract class FuncoesSql {
 		valores = valores.replace("(,", "(");
 		colunas = colunas.replace("(,", "(") + ")";
 		sql += colunas + " VALUES " + valores + ");";
-		sql += tipoSql == SQL_SERVER ? " SET IDENTITY_INSERT "+nomeTabela+" OFF; " : "";
+		sql += tipoSql == SQL_SERVER ? " SET IDENTITY_INSERT "+nomeTabela+" OFF; END " : "";
 		return sql;
 	}
 	
@@ -381,6 +395,10 @@ public abstract class FuncoesSql {
 				colunas += s + " = "
 						+ FuncoesGerais.calendarToString((Calendar) atributo, FuncoesGerais.yyyyMMdd_HHMMSS, true)
 						+ ",";
+			} else if (VerificaTipos.isTime(map.get(s), null)) {
+				colunas += s + " = "
+						+ FuncoesGerais.timeToString((Time) atributo, FuncoesGerais.hhmmss)
+						+ ",";
 			} else if (VerificaTipos.isBoolean(map.get(s), null)) {
 				colunas += s + " = " + FuncoesGerais.booleanToint((Boolean) map.get(s)) + ",";
 			} else { // caso seja real ou integer
@@ -393,5 +411,19 @@ public abstract class FuncoesSql {
 		sql += colunas + " WHERE " + tabela.getIdNome() + " = " + tabela.getId() + ";";
 		return sql;
 	}
-
+	
+	public static String monstaSqlSelect(Tabela tabela, String where, String[] colunas) {
+		String linhaColunas = "";
+		
+		for(String s : colunas) {
+			linhaColunas  += s + ",";
+		}
+		linhaColunas.substring(0, linhaColunas.length()-1);
+		
+		return "SELECT #colunas FROM #nomeTabela WHERE #where"
+				.replace("#colunas", linhaColunas)
+				.replace("#nomeTabela", tabela.getNomeTabela(false))
+				.replace("#where", where); 
+	}
+	
 }

@@ -7,8 +7,6 @@ import app.jm.funcional.model.Tabela;
 
 public abstract class TabelaIntermediaria extends Tabela {
 
-    public abstract  void setMapAtributos(HashMap<String, Object> map);
-
     @Override
     public List<Tabela> getListValoresIniciais() {
         return null;

@@ -1,5 +1,6 @@
 package br.appcomercial.servidor.controller.firebase;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import app.jm.funcional.model.Tabela;
@@ -30,6 +31,11 @@ public class FirebaseConfig extends Tabela {
 	@Override
 	public List<Tabela> getListValoresIniciais() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Type typeParaJson() {
 		return null;
 	}
 

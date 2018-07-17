@@ -4,9 +4,12 @@ package app.jm.funcional.controller.funcoesGerais;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Set;
@@ -25,31 +28,30 @@ public final class FuncoesGerais {
     public static final String yyyyMMdd_HHMMSS = "yyyy-MM-dd hh:mm:ss";
     public static final String ddMMyyyy = "dd/MM/yyyy";
     public static final String yyyyMMdd = "yyyy-MM-dd";
+    public static final int hhmmss = 1;
+    public static final int hhmm = 2;
     
     public static long getIdUnico() {
     	long idEmpresa = VariaveisControle.empresaCliente == null ? 0 : VariaveisControle.empresaCliente.getId();
-    	int i = (int)(Math.random() * 10);
-    	int i2 = (int) (Math.random()* 10);
-    	String idFuncionario = VariaveisControle.usuarioFuncionarioLogado == null ? i + "" : VariaveisControle.usuarioFuncionarioLogado.getId() + "";
-    	long intAnt = (+new GregorianCalendar().getTimeInMillis());
-    	String ss = String.valueOf(intAnt);
-    	String s = ss.substring(ss.length() - 5,ss.length());
-    	return Integer.parseInt(idEmpresa + idFuncionario + i2 + s);
+    	int aleatorio = (int) (Math.random() * 10);
+    	String idFuncionario = VariaveisControle.usuarioFuncionarioLogado == null ? aleatorio + "" : VariaveisControle.usuarioFuncionarioLogado.getId() + "";
+    	String id = "";
+    	
+    	for(int i = 0; i < 2; i ++) {
+    		id += (int) (Math.random() * 1000);
+    	}
+    	
+    	return Long.parseLong(idEmpresa + idFuncionario + id);
     }
     
     public static long getIdUnicoVenda() {
     	long idEmpresa = VariaveisControle.empresaCliente == null ? 0 : VariaveisControle.empresaCliente.getId();
-    	double i = Math.random();
-    	long intAnt = (+new GregorianCalendar().getTimeInMillis());
-    	String ss = String.valueOf(intAnt);
-    	String s = ss.substring(ss.length() - 4,ss.length());
-    	String idVendedor = VariaveisControle.usuarioFuncionarioLogado == null ? addZeros(Integer.parseInt(s), 4) : VariaveisControle.usuarioFuncionarioLogado.getId() + "";
+    	int aleatorio = (int) (Math.random() * 10);
+    	String idVendedor = VariaveisControle.usuarioFuncionarioLogado == null ? aleatorio +"": VariaveisControle.usuarioFuncionarioLogado.getId() + "";
     	IConnection iConnection = VariaveisControle.iConnection;
-    	int id = iConnection.countIdEntidade(new Venda()) + 1;
-    	return Integer.parseInt(idEmpresa + idVendedor + id) ;
-    	//191501153408
-    	//1914016153911
-    	//199018153652
+    	long id = iConnection.countIdEntidade(new Venda()) + 1;
+    	
+    	return Long.parseLong(idEmpresa + idVendedor + id) ;
     }
 
     public static String corrigeValoresCampos(String s) {
@@ -103,7 +105,7 @@ public final class FuncoesGerais {
 
     public static Calendar corrigeValoresCalendar(Object o, String formato) {
         if (o == null) {
-            return Calendar.getInstance();
+            return getCalendarNulo();
         } else {
             return stringToCalendar(o+"", formato);
         }
@@ -287,9 +289,15 @@ public final class FuncoesGerais {
         if(calendar == null || calendar.getTimeInMillis() == 0 ){
             return null;
         }
-            SimpleDateFormat fd = new SimpleDateFormat(formato);
-        String data= "'"+ fd.format(calendar.getTime()) + "'";
-        return paraSql == false ? data.replace("'","") : data;
+        String formatoAnterior = formato;
+        if(formato == FuncoesGerais.yyyyMMdd_HHMMSS) {
+        	formato = yyyyMMdd;
+        }
+        SimpleDateFormat fd = new SimpleDateFormat(formato);
+        String data= fd.format(calendar.getTime());
+        String hora = formatoAnterior == FuncoesGerais.yyyyMMdd_HHMMSS ? " 00:00:00" : "";
+        data = "'" + data + hora + "'";
+        return paraSql == false ? data.replace("'","") : data ;
     }
 
     /**@param nomeAtributo - Informe o nome do field na tabela
@@ -398,6 +406,12 @@ public final class FuncoesGerais {
         calendar.setTimeInMillis(0);
         return calendar;
     }
+    
+    public static Time getTimeNow(){    
+    	Calendar calendar = Calendar.getInstance();
+    	Date d = calendar.getTime();
+        return Time.valueOf("#h:#m:#s".replace("#h", d.getHours()+"").replace("#m",d.getMinutes()+"").replace("#s", d.getSeconds()+""));
+    }
 
     public static boolean calendarIsNulo(Calendar calendar){
         return calendar.getTimeInMillis() == 0;
@@ -408,5 +422,22 @@ public final class FuncoesGerais {
         return Modifier.isFinal(o.getClass().getModifiers());
     }
     
- 
+    public static String timeToString(Time time, int tipo) {
+    	String segundo1 =  time.getSeconds() +"";
+    	String segundo = segundo1.length() == 1 ? "0" + segundo1 : segundo1;
+    	segundo = tipo == hhmmss ? ":" + segundo: "";
+    	String minuto1 = time.getMinutes() +"";
+    	String minuto = minuto1.length() == 1 ? "0" + minuto1 : minuto1;
+    	String hora1 = time.getHours()+ "";
+    	String hora = hora1.length() == 1 ? "0" + hora1 : hora1;
+    	return  hora + ":" + minuto  + segundo;
+    }
+    
+    public static Time stringToTime(String s) {
+    	
+    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm:ss");
+    	Time time = Time.valueOf(s);
+    	return time;
+    }
+    
 }

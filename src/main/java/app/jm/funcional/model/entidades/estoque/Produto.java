@@ -2,14 +2,18 @@ package app.jm.funcional.model.entidades.estoque;
 
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
 
 import app.jm.funcional.model.entidades.Entidade;
 import app.jm.funcional.model.entidades.cadastral.pessoas.Fornecedor;
 
 public class Produto extends Entidade implements Serializable{
-
+	
 	private String nome_produto;
     private long codigoBarras;
     private String descricao;
@@ -34,34 +38,6 @@ public class Produto extends Entidade implements Serializable{
     private Csons csonsNfce;
     private Cfop cfop;
 
-//
-//    @Override
-//    public void setMapAtributos(HashMap<String, Object> map) {
-//        id = (int) map.get(getIdNome());
-//        nome_produto = (String) map.get("nome_produto");
-//        codigoBarras = (long) map.get("codigoBarras");
-//        descricao = (String) map.get("descricao");
-//        unidade = (Unidade) map.get("unidade");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        preco = (double) map.get("preco");
-//        custoCompra = (double) map.get("custoCompra");
-//        ultimaCompra = (String) map.get("ultimaCompra");
-//        qtd = (int) map.get("qtd");
-//        qtdMinima = (int) map.get("qtdMinima");
-//        grupo = (Grupo) map.get("grupo");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        ncm = (Ncm) map.get("ncm");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        aliquota = (double) map.get("aliquota");
-//        comissao = (double) map.get("comissao");
-//        lucroBruto = (double) map.get("lucroBruto");
-//        dataCompra = (Calendar) map.get("dataCompra");
-//        fornecedor = (Fornecedor) map.get("fornecedor");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        impostoIbpt = (double) map.get("impostoIbpt");
-//        csons = (Csons) map.get("csons");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        cit = (String) map.get("cit");
-//        tipoItem = (TipoItem) map.get("tipoItem");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        csonsNfce = (Csons) map.get("csonsNfce");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//        cfop = (Cfop) map.get("cfop");//+ FuncoesGerais.prefixoChaveEstrangeira());
-//    }
-   
 
     @Override
     public String toString() {
@@ -257,4 +233,9 @@ public class Produto extends Entidade implements Serializable{
         this.cfop = cfop;
     }
 
+    @Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Produto>>(){}.getType();
+	}
+    
 }

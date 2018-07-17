@@ -1,9 +1,12 @@
 package app.jm.funcional.model;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
 
 import app.jm.funcional.controller.FuncoesSql;
 import app.jm.funcional.controller.VariaveisControle;
@@ -13,25 +16,16 @@ public class Configuracoes extends Tabela{
 
     private boolean vendaMesaComanda;
     private boolean vendaSemEstoque;
+    private boolean backupEmNuvem;
     private String nomeTipoVenda;
     private int numeroDeMesasComandas;
     private String activityInicial;
 
 
-
-//    @Override
-//    public void setMapAtributos(HashMap<String, Object> map) {
-//        id = (int) map.get(getIdNome());
-//        vendaMesaComanda = (boolean) map.get("vendaMesaComanda");
-//        vendaSemEstoque = (boolean) map.get("vendaSemEstoque");
-//        dataExclusao = (Calendar) map.get("dataExclusao");
-//        nomeTipoVenda = (String) map.get("nomeTipoVenda");
-//        numeroDeMesasComandas = (int) map.get("numeroDeMesasComandas");
-//    }
-
     @Override
     public List<Tabela> getListValoresIniciais() {
-        this.vendaMesaComanda = true;
+        this.vendaMesaComanda = false;
+        this.backupEmNuvem = true;
         this.vendaSemEstoque = false;
         this.nomeTipoVenda = "Comanda";
         List list = new ArrayList();
@@ -79,6 +73,19 @@ public class Configuracoes extends Tabela{
     	return this.activityInicial;
     }
     
+	public void setActivityInicial(String activityInicial) {
+		this.activityInicial = activityInicial;
+	}
+	
+
+	public boolean isBackupEmNuvem() {
+		return backupEmNuvem;
+	}
+
+	public void setBackupEmNuvem(boolean backupEmNuvem) {
+		this.backupEmNuvem = backupEmNuvem;
+	}
+	 
     @Override
     public boolean usaInsert() {
     	if(VariaveisControle.tipoSql == FuncoesSql.SQL_SERVER)
@@ -86,4 +93,10 @@ public class Configuracoes extends Tabela{
     	
     	return true;
     }
+    
+
+	@Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Configuracoes>>(){}.getType();
+	}
 }

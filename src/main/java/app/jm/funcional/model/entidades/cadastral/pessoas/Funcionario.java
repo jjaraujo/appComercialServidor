@@ -1,5 +1,6 @@
 package app.jm.funcional.model.entidades.cadastral.pessoas;
 
+import app.jm.funcional.model.dao.IConnection;
 
 public class Funcionario  extends Usuario {
 
@@ -13,10 +14,11 @@ public class Funcionario  extends Usuario {
 //        usuario = (String) map.get("usuario");
 //        senha = (String) map.get("senha");
 //    }
+
     
     @Override
-    public long getId() {
-    	return id;
+    public void geraId(IConnection con) {
+    	id = con.countIdEntidade(this) + 1;
     }
     
     public Double getComissao(){

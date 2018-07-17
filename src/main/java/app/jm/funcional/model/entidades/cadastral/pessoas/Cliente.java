@@ -2,7 +2,12 @@ package app.jm.funcional.model.entidades.cadastral.pessoas;
 
 
 import app.jm.funcional.model.Tabela;
+import app.jm.funcional.model.entidades.estoque.Grupo;
+
+import java.lang.reflect.Type;
 import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
 
 public class Cliente extends APessoa{
 
@@ -34,4 +39,9 @@ public class Cliente extends APessoa{
         }
         return getPessoa().getNome() + " CPF: " + pessoa.getCpfCNPJ();
     }
+    
+    @Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Cliente>>(){}.getType();
+	}
 }

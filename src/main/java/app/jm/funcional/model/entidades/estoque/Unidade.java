@@ -1,6 +1,10 @@
 package app.jm.funcional.model.entidades.estoque;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
+
+import com.google.gson.reflect.TypeToken;
 
 import app.jm.funcional.model.entidades.Entidade;
 
@@ -27,5 +31,10 @@ public class Unidade extends Entidade{
         this.nome_unidade = nome_unidade;
     }
 
-
+    
+    @Override
+	public Type typeParaJson() {
+		return new TypeToken<List<Unidade>>(){}.getType();
+	}
+    
 }
